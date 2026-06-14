@@ -67,24 +67,24 @@ function CVPage() {
       </div>
 
       {/* A4 CV Sheet — max-w mirrors A4 width (794px @ 96dpi), centered with shadow */}
-      <div className="mx-auto max-w-[794px] w-full px-4 pb-12 print:px-0 print:pb-0">
-        <div className="bg-white text-black shadow-xl rounded-sm px-12 py-10 print:shadow-none print:px-[15mm] print:py-[15mm] print:rounded-none">
+      <div className="mx-auto max-w-[794px] w-full px-4 pb-12 print:px-0 print:pb-0 overflow-x-hidden">
+        <div className="bg-white text-black shadow-xl rounded-sm px-6 py-8 md:px-12 md:py-10 print:shadow-none print:px-[15mm] print:py-[15mm] print:rounded-none">
 
         {/* Header */}
         <header className="border-b-2 border-neutral-200 pb-3 mb-4 print:break-inside-avoid">
-          <div className="flex flex-row gap-6 items-center">
+          <div className="flex flex-row gap-4 sm:gap-6 items-center">
             {p?.avatar_url && (
               <img
                 src={p.avatar_url}
                 alt="Profile"
-                className="w-24 h-24 shrink-0 rounded-full object-cover border border-neutral-200"
+                className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-full object-cover border border-neutral-200"
               />
             )}
-            <div>
-              <h1 className="text-4xl font-bold tracking-tight text-neutral-900 uppercase">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 uppercase break-words">
                 {p?.full_name ?? "Name"}
               </h1>
-              <h2 className="text-xl text-neutral-600 mt-1 font-medium">{p?.title ?? ""}</h2>
+              <h2 className="text-lg sm:text-xl text-neutral-600 mt-1 font-medium break-words">{p?.title ?? ""}</h2>
 
               <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm text-neutral-500">
                 {p?.email && <span>{p.email}</span>}
@@ -113,20 +113,20 @@ function CVPage() {
             </h3>
             <div className="space-y-3">
               {academics.data.map((acad) => (
-                <div key={acad?.id} className="flex flex-row justify-between print:break-inside-avoid">
-                  <div className="flex-1">
-                    <h4 className="text-base font-bold text-neutral-800">{acad?.degree ?? ""}</h4>
-                    <p className="text-sm text-neutral-600">{acad?.institution ?? ""}</p>
+                <div key={acad?.id} className="flex flex-row justify-between gap-4 print:break-inside-avoid">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-base font-bold text-neutral-800 break-words">{acad?.degree ?? ""}</h4>
+                    <p className="text-sm text-neutral-600 break-words">{acad?.institution ?? ""}</p>
                     {acad?.cgpa && (
                       <p className="text-sm font-medium text-neutral-700 mt-0.5">
                         {acad?.score_type === "Grade" ? "Grade" : "CGPA"}: {acad.cgpa}
                       </p>
                     )}
                     {acad?.achievements && (
-                      <p className="text-sm text-neutral-500 mt-0.5">{acad.achievements}</p>
+                      <p className="text-sm text-neutral-500 mt-0.5 break-words">{acad.achievements}</p>
                     )}
                   </div>
-                  <div className="text-sm font-medium text-neutral-500 whitespace-nowrap ml-4 text-right">
+                  <div className="text-sm font-medium text-neutral-500 whitespace-normal sm:whitespace-nowrap shrink-0 text-right max-w-[40%]">
                     {acad?.is_ongoing
                       ? `${acad?.start_date ?? ""} - Present (Expected: ${acad?.end_date ?? ""})`
                       : `${acad?.start_date ?? ""} - ${acad?.end_date ?? ""}`}
@@ -145,17 +145,17 @@ function CVPage() {
             </h3>
             <div className="space-y-3">
               {work.data.map((w) => (
-                <div key={w?.id} className="flex flex-row justify-between print:break-inside-avoid">
-                  <div className="flex-1">
-                    <h4 className="text-base font-bold text-neutral-800">{w?.job_title ?? ""}</h4>
-                    <p className="text-sm font-medium text-neutral-600 mb-1">{w?.company ?? ""}</p>
+                <div key={w?.id} className="flex flex-row justify-between gap-4 print:break-inside-avoid">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-base font-bold text-neutral-800 break-words">{w?.job_title ?? ""}</h4>
+                    <p className="text-sm font-medium text-neutral-600 mb-1 break-words">{w?.company ?? ""}</p>
                     {w?.description && (
-                      <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line">
+                      <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line break-words">
                         {w.description}
                       </p>
                     )}
                   </div>
-                  <div className="text-sm font-medium text-neutral-500 whitespace-nowrap ml-4 text-right">
+                  <div className="text-sm font-medium text-neutral-500 whitespace-normal sm:whitespace-nowrap shrink-0 text-right max-w-[40%]">
                     {w?.is_ongoing
                       ? `${w?.start_date ?? ""} - Present`
                       : `${w?.start_date ?? ""} - ${w?.end_date ?? ""}`}
@@ -215,10 +215,17 @@ function CVPage() {
                         {lang?.percentage ?? 0}%
                       </span>
                     </div>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-200 border border-neutral-300">
+                    <div 
+                      className="h-2 w-full overflow-hidden rounded-full bg-neutral-200 border border-neutral-300"
+                      style={{ WebkitPrintColorAdjust: "exact", printColorAdjust: "exact" }}
+                    >
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-1000 ease-out print:color-adjust-exact print:bg-primary"
-                        style={{ width: `${lang?.percentage ?? 0}%` }}
+                        className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-1000 ease-out print:bg-primary"
+                        style={{ 
+                          width: `${lang?.percentage ?? 0}%`,
+                          WebkitPrintColorAdjust: "exact", 
+                          printColorAdjust: "exact" 
+                        }}
                       />
                     </div>
                   </div>
