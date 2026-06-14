@@ -110,24 +110,24 @@ function CVPage() {
               : undefined,
           }}
         >
-          <div ref={cvRef} className="w-full bg-white text-black p-[20mm] shadow-lg print:shadow-none print:p-0">
+          <div ref={cvRef} className="w-full bg-white text-black p-8 shadow-lg print:shadow-none print:p-0 print:w-full">
         {/* Header */}
-        <header className="border-b-2 border-neutral-200 pb-6 mb-6">
-          <div className="flex flex-row gap-8 items-center">
+        <header className="border-b-2 border-neutral-200 pb-3 mb-4 print:break-inside-avoid">
+          <div className="flex flex-row gap-6 items-center">
             {p?.avatar_url && (
               <img
                 src={p.avatar_url}
                 alt="Profile"
-                className="w-32 h-32 shrink-0 rounded-full object-cover border border-neutral-200"
+                className="w-24 h-24 shrink-0 rounded-full object-cover border border-neutral-200"
               />
             )}
             <div>
               <h1 className="text-4xl font-bold tracking-tight text-neutral-900 uppercase">
                 {p?.full_name ?? "Name"}
               </h1>
-              <h2 className="text-xl text-neutral-600 mt-2 font-medium">{p?.title ?? ""}</h2>
+              <h2 className="text-xl text-neutral-600 mt-1 font-medium">{p?.title ?? ""}</h2>
 
-              <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-500">
+              <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm text-neutral-500">
                 {p?.email && <span>{p.email}</span>}
                 {p?.phone && <span>{p.phone}</span>}
                 {p?.linkedin_url && (
@@ -143,18 +143,18 @@ function CVPage() {
               </div>
             </div>
           </div>
-          {p?.bio && <p className="mt-6 text-neutral-700 leading-relaxed text-sm">{p.bio}</p>}
+          {p?.bio && <p className="mt-3 text-neutral-700 leading-relaxed text-sm">{p.bio}</p>}
         </header>
 
         {/* Academics (Education) */}
         {academics.data && academics.data.length > 0 && (
-          <section className="mb-8">
-            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-4 border-b border-neutral-200 pb-1">
+          <section className="mb-4 print:break-inside-avoid">
+            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-2 border-b border-neutral-200 pb-1">
               Education
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-3">
               {academics.data.map((acad) => (
-                <div key={acad?.id} className="flex flex-row justify-between">
+                <div key={acad?.id} className="flex flex-row justify-between print:break-inside-avoid">
                   <div className="flex-1">
                     <h4 className="text-base font-bold text-neutral-800">{acad?.degree ?? ""}</h4>
                     <p className="text-sm text-neutral-600">{acad?.institution ?? ""}</p>
@@ -164,7 +164,7 @@ function CVPage() {
                       </p>
                     )}
                     {acad?.achievements && (
-                      <p className="text-sm text-neutral-500 mt-1">{acad.achievements}</p>
+                      <p className="text-sm text-neutral-500 mt-0.5">{acad.achievements}</p>
                     )}
                   </div>
                   <div className="text-sm font-medium text-neutral-500 whitespace-nowrap ml-4 text-right">
@@ -180,16 +180,16 @@ function CVPage() {
 
         {/* Work Experience */}
         {work.data && work.data.length > 0 && (
-          <section className="mb-8">
-            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-4 border-b border-neutral-200 pb-1">
+          <section className="mb-4 print:break-inside-avoid">
+            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-2 border-b border-neutral-200 pb-1">
               Work Experience
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-3">
               {work.data.map((w) => (
-                <div key={w?.id} className="flex flex-row justify-between">
+                <div key={w?.id} className="flex flex-row justify-between print:break-inside-avoid">
                   <div className="flex-1">
                     <h4 className="text-base font-bold text-neutral-800">{w?.job_title ?? ""}</h4>
-                    <p className="text-sm font-medium text-neutral-600 mb-2">{w?.company ?? ""}</p>
+                    <p className="text-sm font-medium text-neutral-600 mb-1">{w?.company ?? ""}</p>
                     {w?.description && (
                       <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line">
                         {w.description}
@@ -209,8 +209,8 @@ function CVPage() {
 
         {/* Skills */}
         {skills.data && skills.data.length > 0 && (
-          <section className="mb-8">
-            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-4 border-b border-neutral-200 pb-1">
+          <section className="mb-4 print:break-inside-avoid">
+            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-2 border-b border-neutral-200 pb-1">
               Technical Skills
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -232,11 +232,11 @@ function CVPage() {
 
         {/* Languages */}
         {p?.languages && p.languages.length > 0 && (
-          <section className="mt-8">
-            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-4 border-b border-neutral-200 pb-1">
+          <section className="mt-4 print:break-inside-avoid">
+            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-2 border-b border-neutral-200 pb-1">
               Languages
             </h3>
-            <div className="flex flex-col w-[45%] max-w-[400px] space-y-4">
+            <div className="flex flex-col w-[45%] max-w-[400px] space-y-3">
               {[...p.languages]
                 .sort((a, b) => {
                   if (a?.proficiency?.toLowerCase() === "native") return -1;
