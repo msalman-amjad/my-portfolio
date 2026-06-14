@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAcademics, fetchProfile, fetchSkills, fetchWorkExperience } from "@/lib/portfolio";
