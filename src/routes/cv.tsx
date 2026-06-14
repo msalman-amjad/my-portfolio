@@ -126,7 +126,7 @@ function CVPage() {
                       <p className="text-sm text-neutral-500 mt-0.5 break-words">{acad.achievements}</p>
                     )}
                   </div>
-                  <div className="text-sm font-medium text-neutral-500 whitespace-normal sm:whitespace-nowrap shrink-0 text-right max-w-[40%]">
+                  <div className="text-sm font-medium text-neutral-500 whitespace-normal break-words shrink-0 text-right max-w-[40%]">
                     {acad?.is_ongoing
                       ? `${acad?.start_date ?? ""} - Present (Expected: ${acad?.end_date ?? ""})`
                       : `${acad?.start_date ?? ""} - ${acad?.end_date ?? ""}`}
@@ -155,7 +155,7 @@ function CVPage() {
                       </p>
                     )}
                   </div>
-                  <div className="text-sm font-medium text-neutral-500 whitespace-normal sm:whitespace-nowrap shrink-0 text-right max-w-[40%]">
+                  <div className="text-sm font-medium text-neutral-500 whitespace-normal break-words shrink-0 text-right max-w-[40%]">
                     {w?.is_ongoing
                       ? `${w?.start_date ?? ""} - Present`
                       : `${w?.start_date ?? ""} - ${w?.end_date ?? ""}`}
