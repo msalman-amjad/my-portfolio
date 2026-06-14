@@ -31,6 +31,22 @@ function CVPage() {
   const academics = useQuery({ queryKey: ["academics"], queryFn: fetchAcademics });
   const work = useQuery({ queryKey: ["work"], queryFn: fetchWorkExperience });
   const skills = useQuery({ queryKey: ["skills"], queryFn: fetchSkills });
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const updateScale = () => {
+      const width = window.innerWidth;
+      // 820px gives a little breathing room for the 800px CV
+      if (width < 820) {
+        setScale(width / 820);
+      } else {
+        setScale(1);
+      }
+    };
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
 
   const loading =
     profile.isLoading || academics.isLoading || work.isLoading || skills.isLoading;
@@ -67,8 +83,16 @@ function CVPage() {
       </div>
 
       {/* A4 CV Container Wrapper */}
-      <div className="w-full overflow-x-auto pb-8">
-        <div className="mx-auto max-w-[210mm] min-w-[800px] min-h-[297mm] bg-white text-black p-[20mm] shadow-lg print:shadow-none print:p-0">
+      <div className="w-full flex justify-center pb-8 overflow-hidden">
+        <div 
+          className="origin-top-left md:origin-top" 
+          style={{ 
+            transform: `scale(${scale})`, 
+            width: "800px",
+            marginBottom: scale < 1 ? `calc(297mm * ${scale} - 297mm)` : "0px"
+          }}
+        >
+          <div className="w-full min-h-[297mm] bg-white text-black p-[20mm] shadow-lg print:shadow-none print:p-0">
         {/* Header */}
         <header className="border-b-2 border-neutral-200 pb-6 mb-6">
           <div className="flex flex-row gap-8 items-center">
@@ -225,7 +249,8 @@ function CVPage() {
             </div>
           </section>
         )}
-      </div>
+          </div>
+        </div>
       </div>
     </div>
   );
