@@ -20,16 +20,6 @@ function createSupabaseClient() {
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwa3d0dWR2Z2l3Y29qdXlra21tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNDE0OTAsImV4cCI6MjA5NjkxNzQ5MH0.ApH9rsFAVh0V3o1Mw7y_aqVTGbmk5fbKfS6ZLw7NUs4";
   // ─────────────────────────────────────────────────────────────────────────
 
-  // ── Diagnostic logs ───────────────────────────────────────────────────────
-  console.log("[Supabase] HARDCODE BYPASS ACTIVE");
-  console.log("[Supabase] URL:", SUPABASE_URL);
-  console.log("[Supabase] Key:", SUPABASE_KEY ? "[present]" : "[MISSING]");
-  console.log("[Supabase] VITE_SUPABASE_URL raw (env):", import.meta.env.VITE_SUPABASE_URL);
-  console.log(
-    "[Supabase] VITE_SUPABASE_ANON_KEY raw (env):",
-    import.meta.env.VITE_SUPABASE_ANON_KEY ? "[present]" : "[missing]",
-  );
-  // ─────────────────────────────────────────────────────────────────────────
 
   try {
     const client = createClient<Database>(SUPABASE_URL, SUPABASE_KEY, {
@@ -39,7 +29,6 @@ function createSupabaseClient() {
         autoRefreshToken: true,
       },
     });
-    console.log("[Supabase] Client created successfully ✓");
     return client;
   } catch (err) {
     console.error("[Supabase] createClient threw:", err);

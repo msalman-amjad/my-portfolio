@@ -63,13 +63,19 @@ function AdminPage() {
   const [tab, setTab] = useState<Tab>("profile");
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const mounted = useRef(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     mounted.current = true;
     return () => {
       mounted.current = false;
     };
   }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   useEffect(() => {
     (async () => {
