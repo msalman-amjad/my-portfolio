@@ -46,6 +46,12 @@ export type Skill = {
   created_at?: string;
 };
 
+export type Category = {
+  id: string;
+  name: string;
+  created_at?: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -59,6 +65,8 @@ export type Project = {
   video_url: string | null;
   linkedin_video_url: string | null;
   sort_order: number;
+  category_id: string | null;
+  category?: { name: string } | null;
 };
 
 export async function fetchProfile(): Promise<Profile> {
@@ -103,11 +111,24 @@ export async function fetchProjects(): Promise<Project[]> {
   try {
     const { data, error } = await supabase
       .from("projects" as never)
-      .select("*");
+      .select("*, category:categories(name)");
     if (error) throw error;
     return (data as unknown as Project[]) ?? [];
   } catch {
     throw new Error("Failed to load projects. Please check your connection.");
+  }
+}
+
+export async function fetchCategories(): Promise<Category[]> {
+  try {
+    const { data, error } = await supabase
+      .from("categories" as never)
+      .select("*")
+      .order("name");
+    if (error) throw error;
+    return (data as unknown as Category[]) ?? [];
+  } catch {
+    throw new Error("Failed to load categories. Please check your connection.");
   }
 }
 

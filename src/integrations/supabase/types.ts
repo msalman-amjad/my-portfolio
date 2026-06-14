@@ -38,6 +38,24 @@ export type Database = {
         };
         Relationships: [];
       };
+      categories: {
+        Row: {
+          id: string;
+          name: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       profile: {
         Row: {
           avatar_url: string | null;
@@ -88,6 +106,7 @@ export type Database = {
       };
       projects: {
         Row: {
+          category_id: string | null;
           cover_image: string | null;
           created_at: string;
           description: string;
@@ -106,6 +125,7 @@ export type Database = {
           video_url: string | null;
         };
         Insert: {
+          category_id?: string | null;
           cover_image?: string | null;
           created_at?: string;
           description?: string;
@@ -124,6 +144,7 @@ export type Database = {
           video_url?: string | null;
         };
         Update: {
+          category_id?: string | null;
           cover_image?: string | null;
           created_at?: string;
           description?: string;
@@ -141,7 +162,15 @@ export type Database = {
           updated_at?: string;
           video_url?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "projects_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "categories";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       skills: {
         Row: {

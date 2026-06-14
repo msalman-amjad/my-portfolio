@@ -11,8 +11,10 @@ import {
   Linkedin,
   Images,
   Briefcase,
+  Search,
 } from "lucide-react";
 import type { Academic, Project, Skill, WorkExperience } from "@/lib/portfolio";
+import { Input } from "@/components/ui/input";
 
 function SectionHeader({
   kicker,
@@ -217,6 +219,14 @@ const formatExternalUrl = (url: string | null | undefined): string => {
 
 export function ProjectsSection({ projects }: { projects: Project[] }) {
   const [active, setActive] = useState<Project | null>(null);
+  const [categorySearch, setCategorySearch] = useState("");
+
+  const filteredProjects = projects.filter((p) => {
+    if (!categorySearch.trim()) return true;
+    const catName = p.category?.name || "";
+    return catName.toLowerCase().includes(categorySearch.trim().toLowerCase());
+  });
+
   return (
     <section id="projects" className="py-24">
       <div className="mx-auto max-w-6xl px-4">
@@ -225,8 +235,22 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
           title="Selected Projects"
           subtitle="Click any card to see the full story."
         />
+
+        {/* --- Category Search Bar --- */}
+        <div className="mb-10 max-w-md mx-auto">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground z-10 pointer-events-none" />
+            <Input
+              value={categorySearch}
+              onChange={(e) => setCategorySearch(e.target.value)}
+              placeholder="Search projects by name, category (e.g., Website, Desktop App)..."
+              className="w-full glass shadow-sm pl-12 h-12 rounded-full text-base relative"
+            />
+          </div>
+        </div>
+
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p) => {
+          {filteredProjects.map((p) => {
             const carouselImages = p.project_images?.length ? p.project_images : p.images;
             return (
               <button
@@ -249,11 +273,18 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
                     <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur">
                       <Images className="h-3 w-3" /> {carouselImages.length}
                     </span>
-                  )}
-                </div>
-                <div className="p-5">
-                  <h3 className="text-lg font-bold">{p.title}</h3>
-                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                    )}
+                  </div>
+                  <div className="p-6">
+                    {p.category && (
+                      <span className="inline-block mb-3 rounded-full bg-primary/10 text-primary border border-primary/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+                        {p.category.name}
+                      </span>
+                    )}
+                    <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
+                      {p.title}
+                    </h3>
+                    <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
                     {p.description}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-1.5">

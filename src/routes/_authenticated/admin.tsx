@@ -20,6 +20,7 @@ import {
   Briefcase,
   CalendarIcon,
   GripVertical,
+  Tags,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -28,8 +29,8 @@ import { format, parse } from "date-fns";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { fetchAcademics, fetchProfile, fetchProjects, fetchSkills, fetchWorkExperience } from "@/lib/portfolio";
-import type { Academic, Profile, Project, Skill, WorkExperience } from "@/lib/portfolio";
+import { fetchAcademics, fetchProfile, fetchProjects, fetchSkills, fetchWorkExperience, fetchCategories } from "@/lib/portfolio";
+import type { Academic, Profile, Project, Skill, WorkExperience, Category } from "@/lib/portfolio";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
@@ -56,7 +57,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   }),
 });
 
-type Tab = "profile" | "work" | "academics" | "skills" | "projects" | "password";
+type Tab = "profile" | "work" | "academics" | "skills" | "projects" | "categories" | "password";
 
 function AdminPage() {
   const navigate = useNavigate();
@@ -149,6 +150,7 @@ function AdminPage() {
     { id: "work", label: "Work Experience", icon: Briefcase },
     { id: "academics", label: "Education", icon: GraduationCap },
     { id: "skills", label: "Skills", icon: Sparkles },
+    { id: "categories", label: "Categories", icon: Tags },
     { id: "projects", label: "Projects", icon: FolderKanban },
     { id: "password", label: "Change Password", icon: KeyRound },
   ];
@@ -197,6 +199,7 @@ function AdminPage() {
           {tab === "work" && <WorkExperienceManager />}
           {tab === "academics" && <AcademicsManager />}
           {tab === "skills" && <SkillsManager />}
+          {tab === "categories" && <CategoriesManager />}
           {tab === "projects" && <ProjectsManager />}
           {tab === "password" && <ChangePasswordForm />}
         </section>
@@ -1034,6 +1037,111 @@ function SkillRow({
   );
 }
 
+/* ---------------- Categories ---------------- */
+
+function CategoriesManager() {
+  const qc = useQueryClient();
+  const { data = [] } = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
+  const [isAdding, setIsAdding] = useState(false);
+
+  return (
+    <div className="space-y-4">
+      <Header
+        title="Categories"
+        desc="Manage project categories."
+        action={<AddBtn onClick={() => setIsAdding(true)} disabled={isAdding} />}
+      />
+      <div className="grid gap-3 md:grid-cols-2">
+        {isAdding && (
+          <CategoryRow
+            item={{ id: "new", name: "" }}
+            onCancel={() => setIsAdding(false)}
+            isNew={true}
+          />
+        )}
+        {data.map((s) => (
+          <CategoryRow key={s.id} item={s} />
+        ))}
+        {data.length === 0 && !isAdding && <Empty label="No categories yet" />}
+      </div>
+    </div>
+  );
+}
+
+function CategoryRow({
+  item,
+  onCancel,
+  isNew,
+}: {
+  item: Category;
+  onCancel?: () => void;
+  isNew?: boolean;
+}) {
+  const qc = useQueryClient();
+  const [f, setF] = useState(item);
+  const [saving, setSaving] = useState(false);
+  const mounted = useRef(true);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  const save = async () => {
+    if (!(f.name ?? "").trim()) return toast.error("Name required");
+    setSaving(true);
+    try {
+      const payload = { name: f.name };
+      if (isNew) {
+        const { error } = await supabase.from("categories" as never).insert(payload as never);
+        if (error) throw error;
+        if (onCancel) onCancel();
+      } else {
+        const { error } = await supabase
+          .from("categories" as never)
+          .update(payload as never)
+          .eq("id", item.id);
+        if (error) throw error;
+      }
+      toast.success("Saved");
+      qc.invalidateQueries({ queryKey: ["categories"] });
+    } catch {
+      toast.error("Failed to save, please check your connection.");
+    } finally {
+      if (mounted.current) setSaving(false);
+    }
+  };
+
+  const remove = async () => {
+    if (isNew) {
+      if (onCancel) onCancel();
+      return;
+    }
+    if (!confirm("Delete category?")) return;
+    try {
+      const { error } = await supabase.from("categories" as never).delete().eq("id", item.id);
+      if (error) throw error;
+      qc.invalidateQueries({ queryKey: ["categories"] });
+    } catch {
+      toast.error("Delete failed, please check your connection.");
+    }
+  };
+
+  return (
+    <div className="glass rounded-xl p-3 flex items-center justify-between">
+      <Input
+        value={f.name || ""}
+        onChange={(v) => setF({ ...f, name: v })}
+        placeholder="Category name"
+        className="max-w-[200px]"
+      />
+      <RowActions onSave={save} onDelete={remove} saving={saving} />
+    </div>
+  );
+}
+
 /* ---------------- Projects ---------------- */
 
 const getTechArray = (tech: any): string[] => {
@@ -1081,6 +1189,7 @@ function ProjectsManager() {
       github_url: null,
       video_url: null,
       linkedin_video_url: null,
+      category_id: null,
     } as Project);
   };
 
@@ -1224,6 +1333,7 @@ function ProjectEditor({ project, onClose }: { project: Project; onClose: () => 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
+  const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
 
 
   useEffect(() => {
@@ -1259,6 +1369,7 @@ function ProjectEditor({ project, onClose }: { project: Project; onClose: () => 
         video_url: f.video_url || null,
         linkedin_video_url: f.linkedin_video_url || null,
         sort_order: f.sort_order,
+        category_id: f.category_id || null,
       };
       console.log("Project Payload:", payload);
 
@@ -1322,6 +1433,21 @@ function ProjectEditor({ project, onClose }: { project: Project; onClose: () => 
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
           <Field label="Title *">
             <Input value={f.title} onChange={(v) => setF({ ...f, title: v })} placeholder="Project title" />
+          </Field>
+
+          <Field label="Category (optional)">
+            <select
+              value={f.category_id || ""}
+              onChange={(e) => setF({ ...f, category_id: e.target.value })}
+              className="w-full rounded-xl border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="">Select a category</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
           </Field>
 
           <Field label="Cover Image (optional)" full>
