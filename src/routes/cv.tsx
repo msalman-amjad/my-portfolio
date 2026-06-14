@@ -68,7 +68,7 @@ function CVPage() {
 
       {/* A4 CV Sheet — max-w mirrors A4 width (794px @ 96dpi), centered with shadow */}
       <div className="mx-auto max-w-[794px] w-full px-4 pb-12 print:px-0 print:pb-0 overflow-x-hidden">
-        <div className="bg-white text-black shadow-xl rounded-sm px-6 py-8 md:px-12 md:py-10 print:shadow-none print:px-[15mm] print:py-[15mm] print:rounded-none">
+        <div className="bg-white text-black shadow-xl rounded-sm px-6 py-8 md:px-12 md:py-10 print:shadow-none print:px-[15mm] print:py-[15mm] print:rounded-none print:tracking-normal print:leading-relaxed">
 
         {/* Header */}
         <header className="border-b-2 border-neutral-200 pb-3 mb-4 print:break-inside-avoid">
@@ -94,7 +94,7 @@ function CVPage() {
                     href={p.linkedin_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:underline text-blue-600 dark:text-blue-500"
+                    className="hover:underline text-blue-600 dark:text-blue-500 break-all"
                   >
                     {p.linkedin_url}
                   </a>
@@ -216,13 +216,19 @@ function CVPage() {
                       </span>
                     </div>
                     <div 
-                      className="h-2 w-full overflow-hidden rounded-full bg-neutral-200 border border-neutral-300"
-                      style={{ WebkitPrintColorAdjust: "exact", printColorAdjust: "exact" }}
+                      className="h-2 w-full overflow-hidden rounded-full border border-neutral-300"
+                      style={{ 
+                        backgroundColor: "#e5e5e5",
+                        WebkitPrintColorAdjust: "exact", 
+                        printColorAdjust: "exact" 
+                      }}
                     >
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-1000 ease-out print:bg-primary"
+                        className="h-full rounded-full transition-all duration-1000 ease-out"
                         style={{ 
                           width: `${lang?.percentage ?? 0}%`,
+                          background: "linear-gradient(to right, #9b87f5, #7E69AB)",
+                          backgroundColor: "#9b87f5", // fallback
                           WebkitPrintColorAdjust: "exact", 
                           printColorAdjust: "exact" 
                         }}
