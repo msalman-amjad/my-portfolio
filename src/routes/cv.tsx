@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAcademics, fetchProfile, fetchSkills, fetchWorkExperience } from "@/lib/portfolio";
@@ -33,11 +33,12 @@ function CVPage() {
   const work = useQuery({ queryKey: ["work"], queryFn: fetchWorkExperience });
   const skills = useQuery({ queryKey: ["skills"], queryFn: fetchSkills });
   const [scale, setScale] = useState(1);
+  const [cvHeight, setCvHeight] = useState(0);
+  const cvRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const updateScale = () => {
       const width = window.innerWidth;
-      // 820px gives a little breathing room for the 800px CV
       if (width < 820) {
         setScale(width / 820);
       } else {
@@ -47,6 +48,17 @@ function CVPage() {
     updateScale();
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
+  }, []);
+
+  // Measure the actual rendered height of the CV sheet after content loads
+  useEffect(() => {
+    if (cvRef.current) {
+      const observer = new ResizeObserver(() => {
+        if (cvRef.current) setCvHeight(cvRef.current.offsetHeight);
+      });
+      observer.observe(cvRef.current);
+      return () => observer.disconnect();
+    }
   }, []);
 
   const loading =
@@ -84,21 +96,21 @@ function CVPage() {
       </div>
 
       {/* A4 CV Container Wrapper – scales down on mobile, full size on desktop */}
-      <div
-        className="w-full flex justify-center overflow-hidden"
-        style={{
-          height: scale < 1 ? `calc(297mm * ${scale})` : undefined,
-        }}
-      >
+      {/* overflow must NOT be hidden here – we let marginBottom compensate for phantom layout space */}
+      <div className="w-full flex justify-center">
         <div
-          className="origin-top"
           style={{
             transform: `scale(${scale})`,
             width: "800px",
             transformOrigin: "top center",
+            // CSS transform doesn't affect layout: the element still occupies its original height.
+            // Apply a negative marginBottom equal to the space that disappears after scaling.
+            marginBottom: scale < 1 && cvHeight > 0
+              ? `${cvHeight * scale - cvHeight}px`
+              : undefined,
           }}
         >
-          <div className="w-full min-h-[297mm] bg-white text-black p-[20mm] shadow-lg print:shadow-none print:p-0">
+          <div ref={cvRef} className="w-full bg-white text-black p-[20mm] shadow-lg print:shadow-none print:p-0">
         {/* Header */}
         <header className="border-b-2 border-neutral-200 pb-6 mb-6">
           <div className="flex flex-row gap-8 items-center">
