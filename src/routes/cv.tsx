@@ -66,11 +66,12 @@ function CVPage() {
         </button>
       </div>
 
-      {/* A4 CV Container */}
-      <div className="mx-auto max-w-[210mm] min-h-[297mm] bg-white text-black p-[20mm] shadow-lg print:shadow-none print:p-0">
+      {/* A4 CV Container Wrapper */}
+      <div className="w-full overflow-x-auto pb-8">
+        <div className="mx-auto max-w-[210mm] min-w-[800px] min-h-[297mm] bg-white text-black p-[20mm] shadow-lg print:shadow-none print:p-0">
         {/* Header */}
         <header className="border-b-2 border-neutral-200 pb-6 mb-6">
-          <div className="flex flex-col sm:flex-row gap-8 sm:items-center">
+          <div className="flex flex-row gap-8 items-center">
             {p?.avatar_url && (
               <img
                 src={p.avatar_url}
@@ -111,7 +112,7 @@ function CVPage() {
             </h3>
             <div className="space-y-6">
               {academics.data.map((acad) => (
-                <div key={acad?.id} className="flex flex-col sm:flex-row justify-between">
+                <div key={acad?.id} className="flex flex-row justify-between">
                   <div className="flex-1">
                     <h4 className="text-base font-bold text-neutral-800">{acad?.degree ?? ""}</h4>
                     <p className="text-sm text-neutral-600">{acad?.institution ?? ""}</p>
@@ -124,7 +125,7 @@ function CVPage() {
                       <p className="text-sm text-neutral-500 mt-1">{acad.achievements}</p>
                     )}
                   </div>
-                  <div className="text-sm font-medium text-neutral-500 whitespace-nowrap sm:ml-4 sm:text-right">
+                  <div className="text-sm font-medium text-neutral-500 whitespace-nowrap ml-4 text-right">
                     {acad?.is_ongoing
                       ? `${acad?.start_date ?? ""} - Present (Expected: ${acad?.end_date ?? ""})`
                       : `${acad?.start_date ?? ""} - ${acad?.end_date ?? ""}`}
@@ -143,7 +144,7 @@ function CVPage() {
             </h3>
             <div className="space-y-6">
               {work.data.map((w) => (
-                <div key={w?.id} className="flex flex-col sm:flex-row justify-between">
+                <div key={w?.id} className="flex flex-row justify-between">
                   <div className="flex-1">
                     <h4 className="text-base font-bold text-neutral-800">{w?.job_title ?? ""}</h4>
                     <p className="text-sm font-medium text-neutral-600 mb-2">{w?.company ?? ""}</p>
@@ -153,7 +154,7 @@ function CVPage() {
                       </p>
                     )}
                   </div>
-                  <div className="text-sm font-medium text-neutral-500 whitespace-nowrap sm:ml-4 sm:text-right">
+                  <div className="text-sm font-medium text-neutral-500 whitespace-nowrap ml-4 text-right">
                     {w?.is_ongoing
                       ? `${w?.start_date ?? ""} - Present`
                       : `${w?.start_date ?? ""} - ${w?.end_date ?? ""}`}
@@ -224,6 +225,7 @@ function CVPage() {
             </div>
           </section>
         )}
+      </div>
       </div>
     </div>
   );

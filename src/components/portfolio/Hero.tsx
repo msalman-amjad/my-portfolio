@@ -63,8 +63,8 @@ export function Hero({ profile }: { profile: Profile }) {
   return (
     <section id="home" className="relative min-h-screen overflow-hidden hero-bg pt-32 pb-20">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="grid items-center gap-12 md:grid-cols-[1.4fr_1fr]">
-          <div className="space-y-6 animate-fade-in">
+        <div className="flex flex-row items-center gap-6 md:grid md:grid-cols-[1.4fr_1fr] md:gap-12">
+          <div className="space-y-6 animate-fade-in flex-1">
             <h1 className="text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
               Hi, I'm <span className="gradient-text">{profile?.full_name ?? "There"}</span>
             </h1>
@@ -112,7 +112,7 @@ export function Hero({ profile }: { profile: Profile }) {
             </div>
           </div>
 
-          <div className="relative mx-auto aspect-square w-full max-w-sm order-first md:order-last">
+          <div className="relative aspect-square w-32 shrink-0 md:mx-auto md:w-full md:max-w-sm order-first md:order-last">
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/40 via-accent/30 to-accent-2/30 blur-3xl" />
             <div className="glass-strong relative h-full w-full overflow-hidden rounded-[2rem] shadow-glow animate-scale-in">
               {profile?.avatar_url ? (
