@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAcademics, fetchProfile, fetchSkills, fetchWorkExperience } from "@/lib/portfolio";
@@ -32,34 +31,6 @@ function CVPage() {
   const academics = useQuery({ queryKey: ["academics"], queryFn: fetchAcademics });
   const work = useQuery({ queryKey: ["work"], queryFn: fetchWorkExperience });
   const skills = useQuery({ queryKey: ["skills"], queryFn: fetchSkills });
-  const [scale, setScale] = useState(1);
-  const [cvHeight, setCvHeight] = useState(0);
-  const cvRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const updateScale = () => {
-      const width = window.innerWidth;
-      if (width < 820) {
-        setScale(width / 820);
-      } else {
-        setScale(1);
-      }
-    };
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
-  }, []);
-
-  // Measure the actual rendered height of the CV sheet after content loads
-  useEffect(() => {
-    if (cvRef.current) {
-      const observer = new ResizeObserver(() => {
-        if (cvRef.current) setCvHeight(cvRef.current.offsetHeight);
-      });
-      observer.observe(cvRef.current);
-      return () => observer.disconnect();
-    }
-  }, []);
 
   const loading =
     profile.isLoading || academics.isLoading || work.isLoading || skills.isLoading;
@@ -95,22 +66,10 @@ function CVPage() {
         </button>
       </div>
 
-      {/* A4 CV Container Wrapper – scales down on mobile, full size on desktop */}
-      {/* overflow must NOT be hidden here – we let marginBottom compensate for phantom layout space */}
-      <div className="w-full flex justify-center">
-        <div
-          style={{
-            transform: `scale(${scale})`,
-            width: "800px",
-            transformOrigin: "top center",
-            // CSS transform doesn't affect layout: the element still occupies its original height.
-            // Apply a negative marginBottom equal to the space that disappears after scaling.
-            marginBottom: scale < 1 && cvHeight > 0
-              ? `${cvHeight * scale - cvHeight}px`
-              : undefined,
-          }}
-        >
-          <div ref={cvRef} className="w-full bg-white text-black p-8 shadow-lg print:shadow-none print:p-0 print:w-full">
+      {/* A4 CV Sheet — max-w mirrors A4 width (794px @ 96dpi), centered with shadow */}
+      <div className="mx-auto max-w-[794px] w-full px-4 pb-12 print:px-0 print:pb-0">
+        <div className="bg-white text-black shadow-xl rounded-sm px-12 py-10 print:shadow-none print:px-[15mm] print:py-[15mm] print:rounded-none">
+
         {/* Header */}
         <header className="border-b-2 border-neutral-200 pb-3 mb-4 print:break-inside-avoid">
           <div className="flex flex-row gap-6 items-center">
@@ -267,7 +226,6 @@ function CVPage() {
             </div>
           </section>
         )}
-          </div>
         </div>
       </div>
     </div>
