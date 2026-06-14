@@ -63,19 +63,49 @@ export function Hero({ profile }: { profile: Profile }) {
   return (
     <section id="home" className="relative min-h-screen overflow-hidden hero-bg pt-32 pb-20">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="flex flex-row items-center gap-6 md:grid md:grid-cols-[1.4fr_1fr] md:gap-12">
-          <div className="space-y-6 animate-fade-in flex-1">
-            <h1 className="text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
-              Hi, I'm <span className="gradient-text">{profile?.full_name ?? "There"}</span>
-            </h1>
-            {profile?.title && (
-              <h2 className="text-2xl font-medium text-foreground/80 md:text-3xl">
-                {profile.title}
-              </h2>
-            )}
-            <p className="text-xl text-muted-foreground md:text-2xl">
-              <span className="text-foreground font-medium typing-caret">{typed || "\u00A0"}</span>
-            </p>
+        {/* Mobile: flex-col wrapper; Desktop: grid */}
+        <div className="flex flex-col gap-6 md:grid md:grid-cols-[1.4fr_1fr] md:items-center md:gap-12 animate-fade-in">
+
+          {/* ── Mobile top row: heading LEFT + image RIGHT ── */}
+          {/* On desktop this wrapper is removed from the flow by grid */}
+          <div className="flex flex-col gap-4">
+            {/* Top row on mobile */}
+            <div className="flex flex-row justify-between items-start w-full md:block">
+              {/* Heading block */}
+              <div className="space-y-2 flex-1 pr-4">
+                <h1 className="text-4xl font-bold leading-[1.1] tracking-tight md:text-7xl">
+                  Hi, I'm <span className="gradient-text">{profile?.full_name ?? "There"}</span>
+                </h1>
+                {profile?.title && (
+                  <h2 className="text-lg font-medium text-foreground/80 md:text-3xl">
+                    {profile.title}
+                  </h2>
+                )}
+                <p className="text-base text-muted-foreground md:text-2xl">
+                  <span className="text-foreground font-medium typing-caret">{typed || "\u00A0"}</span>
+                </p>
+              </div>
+
+              {/* Circle image – visible only on mobile (<md) */}
+              <div className="relative w-32 h-32 shrink-0 md:hidden">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/40 via-accent/30 to-accent-2/30 blur-3xl" />
+                <div className="glass-strong relative h-full w-full overflow-hidden rounded-full shadow-glow animate-scale-in">
+                  {profile?.avatar_url ? (
+                    <img
+                      src={profile.avatar_url}
+                      alt={profile?.full_name ?? ""}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-5xl font-bold gradient-text">
+                      {profile?.full_name?.charAt(0) ?? "S"}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Bio + buttons – full width, always below the top row */}
             <p className="max-w-xl text-base leading-relaxed text-muted-foreground">
               {profile?.bio ?? ""}
             </p>
@@ -112,9 +142,10 @@ export function Hero({ profile }: { profile: Profile }) {
             </div>
           </div>
 
-          <div className="relative w-20 h-20 shrink-0 md:aspect-square md:w-full md:h-auto md:mx-auto md:max-w-sm">
+          {/* Large image – desktop only (md+) */}
+          <div className="relative hidden md:block mx-auto aspect-square w-full max-w-sm">
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/40 via-accent/30 to-accent-2/30 blur-3xl" />
-            <div className="glass-strong relative h-full w-full overflow-hidden rounded-full md:rounded-[2rem] shadow-glow animate-scale-in">
+            <div className="glass-strong relative h-full w-full overflow-hidden rounded-[2rem] shadow-glow animate-scale-in">
               {profile?.avatar_url ? (
                 <img
                   src={profile.avatar_url}
@@ -128,7 +159,9 @@ export function Hero({ profile }: { profile: Profile }) {
               )}
             </div>
           </div>
+
         </div>
+
       </div>
     </section>
   );

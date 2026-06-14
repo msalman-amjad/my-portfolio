@@ -83,14 +83,19 @@ function CVPage() {
         </button>
       </div>
 
-      {/* A4 CV Container Wrapper */}
-      <div className="w-full flex justify-center pb-8 overflow-hidden">
-        <div 
-          className="origin-top-left md:origin-top" 
-          style={{ 
-            transform: `scale(${scale})`, 
+      {/* A4 CV Container Wrapper – scales down on mobile, full size on desktop */}
+      <div
+        className="w-full flex justify-center overflow-hidden"
+        style={{
+          height: scale < 1 ? `calc(297mm * ${scale})` : undefined,
+        }}
+      >
+        <div
+          className="origin-top"
+          style={{
+            transform: `scale(${scale})`,
             width: "800px",
-            marginBottom: scale < 1 ? `calc(297mm * ${scale} - 297mm)` : "0px"
+            transformOrigin: "top center",
           }}
         >
           <div className="w-full min-h-[297mm] bg-white text-black p-[20mm] shadow-lg print:shadow-none print:p-0">
