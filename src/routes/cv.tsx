@@ -67,7 +67,7 @@ function CVPage() {
       </div>
 
       {/* A4 CV Sheet — max-w mirrors A4 width (794px @ 96dpi), centered with shadow */}
-      <div className="mx-auto max-w-[794px] w-full px-4 pb-12 print:px-0 print:pb-0 overflow-x-hidden">
+      <div className="mx-auto max-w-[794px] w-full px-4 pb-12 print:px-0 print:pb-0 overflow-x-hidden print:max-w-[800px] print:mx-auto">
         <div className="bg-white text-black shadow-xl rounded-sm px-6 py-8 md:px-12 md:py-10 print:shadow-none print:px-[15mm] print:py-[15mm] print:rounded-none print:tracking-normal print:leading-relaxed">
 
         {/* Header */}
