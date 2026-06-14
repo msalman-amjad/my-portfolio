@@ -224,7 +224,7 @@ function CVPage() {
                       }}
                     >
                       <div
-                        className="h-full rounded-full transition-all duration-1000 ease-out"
+                        className="h-full rounded-full transition-all duration-1000 ease-out print:shadow-[inset_0_0_0_1000px_#9b87f5]"
                         style={{ 
                           width: `${lang?.percentage ?? 0}%`,
                           background: "linear-gradient(to right, #9b87f5, #7E69AB)",

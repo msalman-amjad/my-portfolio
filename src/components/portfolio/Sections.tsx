@@ -176,7 +176,7 @@ export function LanguagesSection({
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-muted/50 border border-border/50">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-1000 ease-out"
+                    className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-1000 ease-out print:shadow-[inset_0_0_0_1000px_var(--color-primary)]"
                     style={{ width: `${lang.percentage}%` }}
                   />
                 </div>
