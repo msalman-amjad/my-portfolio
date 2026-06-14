@@ -73,10 +73,6 @@ function AdminPage() {
     };
   }, []);
 
-  if (!isMounted) {
-    return null;
-  }
-
   useEffect(() => {
     (async () => {
       try {
@@ -124,6 +120,10 @@ function AdminPage() {
     }
     navigate({ to: "/auth", replace: true });
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   if (isAdmin === false) {
     return (
