@@ -112,7 +112,7 @@ export function Hero({ profile }: { profile: Profile }) {
             </div>
           </div>
 
-          <div className="relative mx-auto aspect-square w-full max-w-sm">
+          <div className="relative mx-auto aspect-square w-full max-w-sm order-first md:order-last">
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/40 via-accent/30 to-accent-2/30 blur-3xl" />
             <div className="glass-strong relative h-full w-full overflow-hidden rounded-[2rem] shadow-glow animate-scale-in">
               {profile?.avatar_url ? (
