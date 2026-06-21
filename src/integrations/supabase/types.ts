@@ -109,11 +109,13 @@ export type Database = {
           category_id: string | null;
           cover_image: string | null;
           created_at: string;
+          cv_description: string | null;
           description: string;
           document_url: string | null;
           github_url: string | null;
           id: string;
           images: string[];
+          is_featured_cv: boolean;
           project_images: string[];
           linkedin_video_url: string | null;
           live_url: string | null;
@@ -128,11 +130,13 @@ export type Database = {
           category_id?: string | null;
           cover_image?: string | null;
           created_at?: string;
+          cv_description?: string | null;
           description?: string;
           document_url?: string | null;
           github_url?: string | null;
           id?: string;
           images?: string[];
+          is_featured_cv?: boolean;
           project_images?: string[];
           linkedin_video_url?: string | null;
           live_url?: string | null;
@@ -147,11 +151,13 @@ export type Database = {
           category_id?: string | null;
           cover_image?: string | null;
           created_at?: string;
+          cv_description?: string | null;
           description?: string;
           document_url?: string | null;
           github_url?: string | null;
           id?: string;
           images?: string[];
+          is_featured_cv?: boolean;
           project_images?: string[];
           linkedin_video_url?: string | null;
           live_url?: string | null;
@@ -171,6 +177,48 @@ export type Database = {
             referencedColumns: ["id"];
           }
         ];
+      };
+      work_experience: {
+        Row: {
+          company: string;
+          created_at: string;
+          cv_description: string | null;
+          description: string | null;
+          end_date: string | null;
+          id: string;
+          is_featured_cv: boolean;
+          is_ongoing: boolean;
+          job_title: string;
+          sort_order: number;
+          start_date: string;
+        };
+        Insert: {
+          company: string;
+          created_at?: string;
+          cv_description?: string | null;
+          description?: string | null;
+          end_date?: string | null;
+          id?: string;
+          is_featured_cv?: boolean;
+          is_ongoing?: boolean;
+          job_title: string;
+          sort_order?: number;
+          start_date: string;
+        };
+        Update: {
+          company?: string;
+          created_at?: string;
+          cv_description?: string | null;
+          description?: string | null;
+          end_date?: string | null;
+          id?: string;
+          is_featured_cv?: boolean;
+          is_ongoing?: boolean;
+          job_title?: string;
+          sort_order?: number;
+          start_date?: string;
+        };
+        Relationships: [];
       };
       skills: {
         Row: {

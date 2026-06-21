@@ -38,6 +38,8 @@ export type WorkExperience = {
   is_ongoing?: boolean;
   description: string | null;
   sort_order: number;
+  is_featured_cv?: boolean;
+  cv_description?: string | null;
 };
 
 export type Skill = {
@@ -67,6 +69,8 @@ export type Project = {
   sort_order: number;
   category_id: string | null;
   category?: { name: string } | null;
+  is_featured_cv?: boolean;
+  cv_description?: string | null;
 };
 
 export async function fetchProfile(): Promise<Profile> {

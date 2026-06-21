@@ -21,6 +21,7 @@ import {
   CalendarIcon,
   GripVertical,
   Tags,
+  Star,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -585,6 +586,8 @@ function WorkExperienceManager() {
               is_ongoing: false,
               description: "",
               sort_order: data.length + 1,
+              is_featured_cv: false,
+              cv_description: "",
             }}
             onCancel={() => setIsAdding(false)}
             isNew={true}
@@ -633,6 +636,8 @@ function WorkExperienceRow({
         end_date: f.end_date,
         is_ongoing: f.is_ongoing || false,
         description: f.description || null,
+        is_featured_cv: f.is_featured_cv || false,
+        cv_description: f.cv_description || null,
       };
       console.log("WorkExperience Payload:", payload);
       if (isNew) {
@@ -717,6 +722,32 @@ function WorkExperienceRow({
         placeholder="Description"
         className="mt-3"
       />
+      {/* CV fields */}
+      <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 p-3 space-y-3">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setF({ ...f, is_featured_cv: !f.is_featured_cv })}
+            className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold border transition-colors ${
+              f.is_featured_cv
+                ? "bg-amber-400/20 border-amber-400/50 text-amber-500"
+                : "bg-background/60 border-border text-muted-foreground hover:border-amber-400/50 hover:text-amber-500"
+            }`}
+            aria-pressed={f.is_featured_cv}
+            id={`feat-cv-work-${item.id}`}
+          >
+            <Star className={`h-3.5 w-3.5 ${f.is_featured_cv ? "fill-amber-400 text-amber-400" : ""}`} />
+            Feature in CV
+          </button>
+          <span className="text-[11px] text-muted-foreground">Mark this entry to appear on your generated CV</span>
+        </div>
+        <Textarea
+          value={f.cv_description ?? ""}
+          onChange={(v) => setF({ ...f, cv_description: v })}
+          placeholder="Short CV Description (concise bullet-point style summary for your CV)"
+          rows={2}
+        />
+      </div>
       <RowActions onSave={save} onDelete={remove} saving={saving} />
     </div>
   );
@@ -1190,6 +1221,8 @@ function ProjectsManager() {
       video_url: null,
       linkedin_video_url: null,
       category_id: null,
+      is_featured_cv: false,
+      cv_description: null,
     } as Project);
   };
 
@@ -1370,6 +1403,8 @@ function ProjectEditor({ project, onClose }: { project: Project; onClose: () => 
         linkedin_video_url: f.linkedin_video_url || null,
         sort_order: f.sort_order,
         category_id: f.category_id || null,
+        is_featured_cv: f.is_featured_cv || false,
+        cv_description: f.cv_description || null,
       };
       console.log("Project Payload:", payload);
 
@@ -1478,6 +1513,35 @@ function ProjectEditor({ project, onClose }: { project: Project; onClose: () => 
               placeholder="Detailed project description"
             />
           </Field>
+
+          {/* CV-specific fields */}
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 space-y-3">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setF({ ...f, is_featured_cv: !f.is_featured_cv })}
+                className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold border transition-colors ${
+                  f.is_featured_cv
+                    ? "bg-amber-400/20 border-amber-400/50 text-amber-500"
+                    : "bg-background/60 border-border text-muted-foreground hover:border-amber-400/50 hover:text-amber-500"
+                }`}
+                aria-pressed={f.is_featured_cv}
+                id={`feat-cv-proj-${project.id}`}
+              >
+                <Star className={`h-3.5 w-3.5 ${f.is_featured_cv ? "fill-amber-400 text-amber-400" : ""}`} />
+                Feature in CV
+              </button>
+              <span className="text-[11px] text-muted-foreground">Mark this project to appear on your generated CV</span>
+            </div>
+            <Field label="Short CV Description (optional)" full>
+              <Textarea
+                value={f.cv_description ?? ""}
+                onChange={(v) => setF({ ...f, cv_description: v })}
+                rows={2}
+                placeholder="One or two sentences for your CV — keep it tight and impact-focused"
+              />
+            </Field>
+          </div>
 
           <Field label="Technologies (comma separated, optional)" full>
             <Input

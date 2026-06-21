@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { fetchAcademics, fetchProfile, fetchSkills, fetchWorkExperience } from "@/lib/portfolio";
+import { fetchAcademics, fetchProfile, fetchProjects, fetchSkills, fetchWorkExperience } from "@/lib/portfolio";
 import { Loader2, Printer, ArrowLeft } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
@@ -31,9 +31,14 @@ function CVPage() {
   const academics = useQuery({ queryKey: ["academics"], queryFn: fetchAcademics });
   const work = useQuery({ queryKey: ["work"], queryFn: fetchWorkExperience });
   const skills = useQuery({ queryKey: ["skills"], queryFn: fetchSkills });
+  const projects = useQuery({ queryKey: ["projects"], queryFn: fetchProjects });
 
   const loading =
-    profile.isLoading || academics.isLoading || work.isLoading || skills.isLoading;
+    profile.isLoading || academics.isLoading || work.isLoading || skills.isLoading || projects.isLoading;
+
+  // Featured-only filtered arrays
+  const featuredWork = (work.data ?? []).filter((w) => w.is_featured_cv === true);
+  const featuredProjects = (projects.data ?? []).filter((p) => p.is_featured_cv === true);
 
   if (loading) {
     return (
@@ -137,21 +142,21 @@ function CVPage() {
           </section>
         )}
 
-        {/* Work Experience */}
-        {work.data && work.data.length > 0 && (
+        {/* Work Experience — only featured entries */}
+        {featuredWork.length > 0 && (
           <section className="mb-4 print:break-inside-avoid">
             <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-2 border-b border-neutral-200 pb-1">
               Work Experience
             </h3>
             <div className="space-y-3">
-              {work.data.map((w) => (
+              {featuredWork.map((w) => (
                 <div key={w?.id} className="flex flex-row justify-between gap-4 print:break-inside-avoid">
                   <div className="flex-1 min-w-0">
                     <h4 className="text-base font-bold text-neutral-800 break-words">{w?.job_title ?? ""}</h4>
                     <p className="text-sm font-medium text-neutral-600 mb-1 break-words">{w?.company ?? ""}</p>
-                    {w?.description && (
+                    {(w?.cv_description || w?.description) && (
                       <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line break-words">
-                        {w.description}
+                        {w.cv_description || w.description}
                       </p>
                     )}
                   </div>
@@ -185,6 +190,29 @@ function CVPage() {
                   </span>
                 );
               })}
+            </div>
+          </section>
+        )}
+
+        {/* Projects — only featured entries */}
+        {featuredProjects.length > 0 && (
+          <section className="mb-4 print:break-inside-avoid">
+            <h3 className="text-lg font-bold text-neutral-900 uppercase tracking-wider mb-2 border-b border-neutral-200 pb-1">
+              Projects
+            </h3>
+            <div className="space-y-3">
+              {featuredProjects.map((proj) => (
+                <div key={proj?.id} className="flex flex-row justify-between gap-4 print:break-inside-avoid">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-base font-bold text-neutral-800 break-words">{proj?.title ?? ""}</h4>
+                    {(proj?.cv_description || proj?.description) && (
+                      <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line break-words">
+                        {proj.cv_description || proj.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         )}
