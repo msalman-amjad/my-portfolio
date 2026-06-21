@@ -243,7 +243,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
             <Input
               value={categorySearch}
               onChange={(e) => setCategorySearch(e.target.value)}
-              placeholder="Search projects by name, category (e.g., Website, Desktop App)..."
+              placeholder="Search projects by category (e.g., Website, Desktop App)"
               className="w-full glass shadow-sm pl-12 h-12 rounded-full text-base relative"
             />
           </div>
